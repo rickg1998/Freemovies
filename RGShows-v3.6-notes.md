@@ -1,0 +1,23 @@
+# RGShows 3.6 — embedded website playback
+
+Minimum Android 12, compile/target Android 16 API 36, version code 10. Same app ID and signing certificate as earlier RGShows builds. Existing Render metadata URL, cold-start waiting, Upcoming classification, filters and watchlist remain.
+
+## Tap to watch inside the app
+Tapping a card opens EmbeddedPlaybackActivity immediately. Cached title links load directly; otherwise source lookups run behind one native opening screen. The first unambiguous title match opens in a full-size embedded WebView. No Android VideoView/MediaPlayer stream extractor or external-browser ACTION_VIEW path is present. Website HTML video controls and fullscreen are supported. The app attempts the website's clearly named Play/Watch control or HTML video play method; some sources still require manual interaction, a server choice, a Play tap or their normal verification step. Autoplay is not guaranteed. The Source menu can open any of the four websites inside the app as a fallback. Home returns to the native catalog. Long-press a card for metadata and saved-list controls.
+
+WebView player JavaScript and DOM storage are enabled; third-party cookies are enabled for embedded-player compatibility. Known ad requests and popup/new-window creation are blocked best effort. Safe Browsing stays enabled; file/content access and cleartext mixed content remain blocked. There is no JavaScript-to-native bridge and no DRM/challenge bypass. Some ads and incompatible players can remain. Source pages, their trackers and embedded players may behave like normal websites. Background/pause and player-state handling require device verification, especially for cross-origin iframe media.
+
+## Four source adapters
+67Movies, CineWave, 1Shows and 321Movies (https://321movies.co.uk/) are configured. The backend scraper views now have a normal viewport instead of 1x1 pixels. Two bounded source lookups can run concurrently, and remaining work is canceled after a match opens. Search chooses visible inputs, dispatches reactive input events, and delays submit slightly so the site's own state can update. Collapsed search controls can be opened and retried. No guessed source search routes are invented.
+
+Extractors recognize additional title/movie path forms, prefer real title headings, accept heading-only cards, and can activate one exact matching client-rendered card to observe its real navigation URL. Search variants include the movie's original title and punctuation-cleaned text. Matching handles Latin accents while preserving meaningful non-Latin combining marks, respects known year/type conflicts, prefers matching IMDb IDs and refuses ambiguous matches. Failures are called unverified, not proof that a source lacks the movie. These changes address generic reasons a rendered source such as 67Movies can be missed; they are NOT a live-verified fix for that site's full catalog.
+
+## IMDb details arrive later
+Cached catalog cards can render on startup. Basic search cards are published before the bounded detailed-metadata work finishes. Full metadata then replaces matching IMDb-ID records without duplicate rows. Cached/source links are merged from persisted storage to reduce overwrites by later metadata callbacks. Languages may arrive after posters/titles; the UI identifies pending language details. Original-title aliases are retained for source matching. This does not eliminate first-install dependence on the metadata service; an empty cache still needs a catalog response. Detailed IMDb enrichment continues in the background and can be canceled by a new query.
+
+## Validation and limits
+187 local checks pass: release-date logic, metadata schemas and aliases, native catalog filters, ID/source merging, ad host policy, matching ambiguity/Unicode, rendered search submission, client-card selection and playback-attempt fixtures. APK build/signature/manifest checks pass. The APK was inspected for the embedded activity and absence of external-browser/native-VideoView paths. JavaScript syntax checks pass.
+
+No phone/emulator playback or source-site compatibility test was performed. 67Movies and 321Movies pages were not inspectable as useful live catalogs through the available tools, and the execution environment still disallows direct source-domain access. Actual automatic matching, iframe playback, autoplay and fullscreen behavior remain unverified on device. The app always keeps website playback inside its WebView, but cannot promise that every source will expose or automatically play every title.
+
+No metadata-server change is required for this version beyond the already-published 3.5 service. GitHub scheduled metadata health checks are unchanged.
