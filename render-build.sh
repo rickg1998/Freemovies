@@ -5,7 +5,7 @@ from pathlib import Path
 import hashlib
 import zipfile
 archive = Path("RGShows-metadata-service.zip")
-expected = "8a8331cd477b31b4f0224bee01b7e6b706a9941a73bbae09c77cda62d68c7668"
+expected = "436d9a41bf8b64dd919837d2e6e71d67da9f14a1ac8ee7846c2909d97ea720cf"
 if hashlib.sha256(archive.read_bytes()).hexdigest() != expected:
     raise SystemExit("Metadata service package checksum differs; review the updated package and refresh the deployment checksum.")
 root = Path.cwd().resolve()
@@ -16,3 +16,4 @@ with zipfile.ZipFile(archive) as bundle:
     bundle.extractall(root)
 PY
 python -m pip install --disable-pip-version-check -r rgshows-metadata/requirements.lock
+
