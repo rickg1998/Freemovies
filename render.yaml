@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: rgshows-metadata
+    runtime: python
+    plan: free
+    buildCommand: bash render-build.sh
+    startCommand: python rgshows-metadata/server.py
+    healthCheckPath: /health
+    envVars:
+      - key: HOST
+        value: 0.0.0.0
+      - key: CACHE_DB
+        value: /tmp/rgshows-metadata.sqlite3
